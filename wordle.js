@@ -1,5 +1,31 @@
 import { words } from './words.js';
 
+
+const now = new Date();
+const seed = now.getFullYear() * 100 + now.getMonth() + 1; // Format: YYYYMM
+
+
+class SeededRandom {
+    constructor(seed) {
+        this.seed = seed;
+    }
+
+    _lcg() {
+        const a = 1664525;
+        const c = 1013904223;
+        const m = 2 ** 32;
+        this.seed = (a * this.seed + c) % m;
+        return this.seed / m;
+    }
+
+    next(min = 0, max = 1) {
+        return min + (max - min) * this._lcg();
+    }
+}
+
+
+const rng = new SeededRandom(seed);
+
 var userAnswer = [];
 var boardRow = $(".Row-module_row__pwpBq");
 var keyboard = $(".Key-module_key__kchQI").toArray();
@@ -27,11 +53,11 @@ var answer = ["A", "D", "I", "E", "U"];
 $("#secret").html("&nbsp&nbsp&nbsp&nbsp&nbsp");
 answer = getRandomItem(words);
 console.log(answer);
-$(".absolute").on("mouseenter", function() {
+$(".absolute").on("mouseenter", function () {
     console.log("test")
-            $("#secret").html(answer);
+    $("#secret").html(answer);
 });
-$(".absolute").on("mouseleave", function() {
+$(".absolute").on("mouseleave", function () {
     console.log("test1")
     $("#secret").html("&nbsp&nbsp&nbsp&nbsp&nbsp");
 });
@@ -46,7 +72,8 @@ $("#title").html("Wordle");
 
 function getRandomItem(arr) {
     if (arr.length === 0) return undefined; // Handle empty array case
-    const randomIndex = Math.floor(Math.random() * arr.length);
+    const randomIndex = Math.floor(rng.next() * arr.length - 1);
+    console.log(randomIndex);
     return arr[randomIndex].toUpperCase();
 }
 
@@ -68,7 +95,7 @@ function takeInput(input) {
     if ((/^[aA-zZ]$/.test(input) && isPlaying) || ['←', '↵', 'Backspace', 'Enter'].includes(input)) {
         console.log(wait);
         if ((input === "Enter" || input === '↵') && !wait) {
-            if(!isPlaying ) {
+            if (!isPlaying) {
                 location.reload();
             }
             if (userAnswer.length === 5) {
@@ -211,3 +238,6 @@ function shakeElement(element) {
         element.classList.remove('shake');
     }, 500); // Match the duration of the animation in milliseconds
 }
+
+
+
