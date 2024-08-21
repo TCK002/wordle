@@ -196,9 +196,11 @@ function checkAnswer() {
         var box = boardRow[currentRow].children[index].children[0];
         var userChar = box.innerText;
         if (answer.includes(userChar) && answerCopy.includes(userChar)) {
-            myMap.set(userChar, "present");
-            remove(answerCopy, userChar);
-            box.setAttribute("data-state", "present");
+            if(myMap.get(userChar) !== "correct") {
+                myMap.set(userChar, "present");
+                remove(answerCopy, userChar);
+                box.setAttribute("data-state", "present");
+            }
         }
     }
 
