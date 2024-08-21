@@ -2,7 +2,7 @@ import { words } from './words.js';
 
 
 const now = new Date();
-const seed = now.getFullYear() * 100 + now.getMonth() + 1; // Format: YYYYMM
+const seed = now.getFullYear() * 100 + now.getMonth() + 1 + now.getDay(); // Format: YYYYMM
 
 
 class SeededRandom {
